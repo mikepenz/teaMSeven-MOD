@@ -24,6 +24,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.tundem.teamsevenmod.config.Cfg;
+import com.tundem.teamsevenmod.entity.MiscSetting;
 import com.tundem.teamsevenmod.helper.SettingHelper;
 import com.tundem.teamsevenmod.util.FileHelper;
 
@@ -115,11 +117,9 @@ public class BackgroundIntentService extends IntentService {
 			suAvailable = Shell.SU.available();
 
 			if (suAvailable) {
-				Shell.SU.run("chmod 666 " + SettingHelper.dt2wakePath);
-				Shell.SU.run("chmod 666 " + SettingHelper.sweep2wakePath);
-				Shell.SU.run("chmod 666 " + SettingHelper.logo2menuPath);
-				Shell.SU.run("chmod 666 " + SettingHelper.logo2wakePath);
-				Shell.SU.run("chmod 666 " + SettingHelper.blinkingbuttonsPath);
+				for (MiscSetting miscSetting : Cfg.miscSettings) {
+					Shell.SU.run("chmod 666 " + miscSetting.getSettingPath());
+				}
 			}
 
 			return null;
@@ -131,11 +131,10 @@ public class BackgroundIntentService extends IntentService {
 				settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 
 				//set settings deppending on what we want!
-				FileHelper.writeStringToFile(SettingHelper.dt2wakePath, settings.getString(SettingHelper.dt2wakePath, "0\n"));
-				FileHelper.writeStringToFile(SettingHelper.sweep2wakePath, settings.getString(SettingHelper.sweep2wakePath, "0\n"));
-				FileHelper.writeStringToFile(SettingHelper.logo2menuPath, settings.getString(SettingHelper.logo2menuPath, "2\n"));
-				FileHelper.writeStringToFile(SettingHelper.logo2wakePath, settings.getString(SettingHelper.logo2wakePath, "2\n"));
-				FileHelper.writeStringToFile(SettingHelper.blinkingbuttonsPath, settings.getString(SettingHelper.blinkingbuttonsPath, "0\n"));
+
+				for (MiscSetting miscSetting : Cfg.miscSettings) {
+					FileHelper.writeStringToFile(miscSetting.getSettingPath(), settings.getString(miscSetting.getSettingPath(), miscSetting.getValueDisabled() + "\n"));
+				}
 			}
 
 			Log.v("com.tundem.teamsevenmod", "onBootComplete suAvailable: " + suAvailable);

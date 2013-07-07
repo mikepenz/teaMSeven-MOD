@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.fima.cardsui.views.CardUI;
+import com.tundem.teamsevenmod.config.Cfg;
+import com.tundem.teamsevenmod.entity.MiscSetting;
 import com.tundem.teamsevenmod.helper.SettingHelper;
 import com.tundem.teamsevensysfschanger.R;
 
@@ -111,17 +113,10 @@ public class TeaMSevenSettingsFragment extends Fragment {
 				mCardView.addCard(new SettingCard("TestSetting", sb.toString()));
 				*/
 
-				settingHelper.initSetting(SettingHelper.dt2wakePath);
-				settingHelper.initSetting(SettingHelper.sweep2wakePath);
-				settingHelper.initSetting(SettingHelper.logo2menuPath);
-				settingHelper.initSetting(SettingHelper.logo2wakePath);
-				settingHelper.initSetting(SettingHelper.blinkingbuttonsPath);
-
-				mCardView.addCard(settingHelper.getDt2wake());
-				mCardView.addCard(settingHelper.getSweep2WakeCard());
-				mCardView.addCard(settingHelper.getLogo2menu());
-				mCardView.addCard(settingHelper.getLogo2wake());
-				mCardView.addCard(settingHelper.getBlinkingbuttons());
+				for(MiscSetting miscSetting : Cfg.miscSettings) {
+					settingHelper.initSetting(miscSetting.getSettingPath());
+					mCardView.addCard(settingHelper.getCard(miscSetting));
+				}
 
 				mCardView.refresh();
 

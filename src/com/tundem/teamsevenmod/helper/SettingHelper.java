@@ -7,6 +7,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.tundem.teamsevenmod.cardui.SettingCard;
+import com.tundem.teamsevenmod.entity.MiscSetting;
 import com.tundem.teamsevenmod.util.FileHelper;
 import com.tundem.teamsevenmod.util.FileHelper.ChangePermission;
 import com.tundem.teamsevensysfschanger.R;
@@ -28,6 +29,7 @@ public class SettingHelper {
 		this.editor = this.settings.edit();
 	}
 
+	/*
 	public final static String sweep2wakePath = "/sys/android_touch/sweep2wake";
 
 	public SettingCard getSweep2WakeCard() {
@@ -56,34 +58,34 @@ public class SettingHelper {
 
 	public SettingCard getBlinkingbuttons() {
 		return getCard("blinkingbuttons", "Some description of blinkingbuttons...", blinkingbuttonsPath, "1", "0");
-	}
+	}*/
 
-	public SettingCard getCard(final String name, final String description, final String path, final String eqEnabled, final String eqDisabled) {
+	public SettingCard getCard(final MiscSetting miscSetting) {
 		boolean enabled = false;
 		try {
-			String settingFile = FileHelper.getStringFromFile(path);
+			String settingFile = FileHelper.getStringFromFile(miscSetting.getSettingPath());
 			settingFile = settingFile.replace("\n", "");
-			if (settingFile.equals(eqDisabled)) {
+			if (settingFile.equals(miscSetting.getValueDisabled())) {
 				enabled = false;
-			} else if (settingFile.equals(eqEnabled)) {
+			} else if (settingFile.equals(miscSetting.getValueEnabled())) {
 				enabled = true;
 			}
 
 			//Set setting from read file!
-			String setting = buildSetting(enabled, eqEnabled, eqDisabled);
-			editor.putString(path, setting);
+			String setting = buildSetting(enabled, miscSetting.getValueEnabled(), miscSetting.getValueDisabled());
+			editor.putString(miscSetting.getSettingPath(), setting);
 			editor.commit();
 		} catch (Exception e) {
-			Log.e("com.tundem.teamsevenmod", name + "Error: " + e.toString());
+			Log.e("com.tundem.teamsevenmod", miscSetting.getSettingName() + "Error: " + e.toString());
 		}
 
-		SettingCard setting = new SettingCard(name, description, enabled, new OnCheckedChangeListener() {
+		SettingCard setting = new SettingCard(miscSetting.getSettingName(), miscSetting.getSettingDescr(), enabled, new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				String setting = buildSetting(isChecked, eqEnabled, eqDisabled);
+				String setting = buildSetting(isChecked, miscSetting.getValueEnabled(), miscSetting.getValueDisabled());
 
-				boolean result = FileHelper.writeStringToFile(path, setting);
+				boolean result = FileHelper.writeStringToFile(miscSetting.getSettingPath(), setting);
 
 				if (result) {
 					String changedTo = act.getString(R.string.disabled);
@@ -91,13 +93,13 @@ public class SettingHelper {
 						changedTo = act.getString(R.string.enabled);
 					}
 					
-					Crouton.showText(act, name + " changed to: " + changedTo, Style.INFO);
+					Crouton.showText(act, miscSetting.getSettingName() + " changed to: " + changedTo, Style.INFO);
 
 					//Set setting from selection
-					editor.putString(path, setting);
+					editor.putString(miscSetting.getSettingPath(), setting);
 					editor.commit();
 				} else {
-					Crouton.showText(act, "ERROR: " + name + " not saved", Style.ALERT);
+					Crouton.showText(act, "ERROR: " + miscSetting.getSettingName() + " not saved", Style.ALERT);
 					buttonView.setChecked(!isChecked);
 				}
 			}
