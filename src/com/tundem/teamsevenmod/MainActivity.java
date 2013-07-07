@@ -2,6 +2,9 @@ package com.tundem.teamsevenmod;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +18,10 @@ import com.tundem.teamsevenmod.fragment.AboutFragment;
 import com.tundem.teamsevenmod.fragment.TeaMSevenSettingsFragment;
 import com.tundem.teamsevensysfschanger.R;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+import eu.chainfire.libsuperuser.Shell;
+
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
 	/**
@@ -27,6 +34,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+
+	/**
+	 * Our awesome fragments !!
+	 */
+	TeaMSevenSettingsFragment teaMSevenFragment = new TeaMSevenSettingsFragment();
+	AboutFragment aboutFragment = new AboutFragment();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +77,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			// this tab is selected.
 			actionBar.addTab(actionBar.newTab().setText(mSectionsPagerAdapter.getPageTitle(i)).setTabListener(this));
 		}
+
+		// Let's do some background stuff
+		(new InitializeRoot()).setContext(this).execute();
 	}
 
 	@Override
@@ -93,16 +109,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	 */
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-		Fragment teaMSevenFragment = new TeaMSevenSettingsFragment();
-		Fragment aboutFragment = new AboutFragment();
-		
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			if(position == 0) {
+			if (position == 0) {
 				return teaMSevenFragment;
 			} else {
 				return aboutFragment;
@@ -123,6 +136,52 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				return "ABOUT";
 			}
 			return null;
+		}
+	}
+
+	private class InitializeRoot extends AsyncTask<Void, Void, Void> {
+		private ProgressDialog dialog = null;
+		private Context context = null;
+		private boolean suAvailable = false;
+
+		public InitializeRoot setContext(Context context) {
+			this.context = context;
+			return this;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// We're creating a progress dialog here because we want the user to wait.
+			// If in your app your user can just continue on with clicking other things,
+			// don't do the dialog thing.
+
+			dialog = new ProgressDialog(context);
+			dialog.setTitle("Aquire ROOT");
+			dialog.setMessage("Waiting for ROOT permission ...");
+			dialog.setIndeterminate(true);
+			dialog.setCancelable(false);
+			dialog.show();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			// Let's do some SU stuff
+			suAvailable = Shell.SU.available();
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			dialog.dismiss();
+
+			if (suAvailable) {
+				Crouton.showText(MainActivity.this, "ROOT permission aquired", Style.INFO);
+				
+				teaMSevenFragment.notifyRootAvailable();
+			} else {
+				Crouton.showText(MainActivity.this, "ROOT permission rejected", Style.ALERT);
+			}
 		}
 	}
 }

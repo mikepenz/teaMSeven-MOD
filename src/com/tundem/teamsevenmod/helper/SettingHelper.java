@@ -29,37 +29,6 @@ public class SettingHelper {
 		this.editor = this.settings.edit();
 	}
 
-	/*
-	public final static String sweep2wakePath = "/sys/android_touch/sweep2wake";
-
-	public SettingCard getSweep2WakeCard() {
-		return getCard("sweep2Wake", "Some description of sweep2wake...", sweep2wakePath, "1", "0");
-	}
-
-	public final static String dt2wakePath = "/sys/android_touch/doubletap2wake";
-
-	public SettingCard getDt2wake() {
-		return getCard("dt2wake", "Some description of dt2wake...", dt2wakePath, "1", "0");
-	}
-
-	public final static String logo2menuPath = "/sys/android_touch/logo2menu";
-
-	public SettingCard getLogo2menu() {
-		return getCard("logo2menu", "Some description of logo2menu...", logo2menuPath, "1", "0");
-	}
-
-	public final static String logo2wakePath = "/sys/android_touch/logo2wake";
-
-	public SettingCard getLogo2wake() {
-		return getCard("logo2wake", "Some description of logo2wake...", logo2wakePath, "1", "0");
-	}
-
-	public final static String blinkingbuttonsPath = "/sys/class/leds/button-backlight/blink_buttons";
-
-	public SettingCard getBlinkingbuttons() {
-		return getCard("blinkingbuttons", "Some description of blinkingbuttons...", blinkingbuttonsPath, "1", "0");
-	}*/
-
 	public SettingCard getCard(final MiscSetting miscSetting) {
 		boolean enabled = false;
 		try {
@@ -92,7 +61,7 @@ public class SettingHelper {
 					if (isChecked) {
 						changedTo = act.getString(R.string.enabled);
 					}
-					
+
 					Crouton.showText(act, miscSetting.getSettingName() + " changed to: " + changedTo, Style.INFO);
 
 					//Set setting from selection
