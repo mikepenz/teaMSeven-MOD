@@ -1,12 +1,19 @@
 package com.tundem.teamsevenmod.helper;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.tundem.teamsevenmod.cardui.SettingCard;
+import com.tundem.teamsevenmod.cardui.SpinnerCard;
 import com.tundem.teamsevenmod.entity.MiscSetting;
 import com.tundem.teamsevenmod.util.FileHelper;
 import com.tundem.teamsevenmod.util.FileHelper.ChangePermission;
@@ -62,7 +69,7 @@ public class SettingHelper {
 						changedTo = act.getString(R.string.enabled);
 					}
 
-					Crouton.showText(act, miscSetting.getSettingName() + " changed to: " + changedTo, Style.INFO);
+					//Crouton.showText(act, miscSetting.getSettingName() + " changed to: " + changedTo, Style.INFO);
 
 					//Set setting from selection
 					editor.putString(miscSetting.getSettingPath(), setting);
@@ -76,6 +83,44 @@ public class SettingHelper {
 
 		return setting;
 	}
+
+
+	public SpinnerCard getSpinnerCard(final MiscSetting miscSetting, final String filePath) throws Exception {
+
+		List<String> spinnerContent = FileHelper.getFileContentAsList(miscSetting.getSettingPath());
+
+		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(act,
+				android.R.layout.simple_spinner_dropdown_item,
+				spinnerContent);
+
+		SpinnerCard spinnersetting = new SpinnerCard(miscSetting.getSettingName(), miscSetting.getSettingDescr(), spinnerArrayAdapter, new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
+				String value = parent.getItemAtPosition(pos).toString();
+				FileHelper.writeFile(filePath, value);
+
+
+				String changedTo = value ;
+
+				Crouton.showText(act, miscSetting.getSettingName() + " changed to: " + changedTo, Style.INFO);
+
+				Log.d("-----FILEPATH-----", filePath + "-----------------" +value);
+				
+				//Set setting from selection
+				editor.putString(filePath, value);
+				editor.commit();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		return spinnersetting;
+	}
+
 
 	public String buildSetting(boolean enabled, String eqEnabled, String eqDisabled) {
 		String setting = "";

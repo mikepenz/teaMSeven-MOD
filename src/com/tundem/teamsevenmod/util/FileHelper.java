@@ -6,6 +6,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import utils.CMDProcessor;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -30,6 +35,10 @@ public class FileHelper {
 		}
 	}
 
+	public static void writeFile(String filePath, String value) {
+		CMDProcessor.runSuCommand("busybox echo "+ value + " > "+filePath);
+	}
+	
 	public static class ChangePermission extends AsyncTask<Void, Void, Void> {
 		String filePath;
 
@@ -70,5 +79,12 @@ public class FileHelper {
 		//Make sure you close all streams.
 		fin.close();
 		return ret;
+	}
+	public static List<String> getFileContentAsList(String filePath) throws Exception{
+		String content = getStringFromFile(filePath);
+		String[] splittedContent = content.split(" ");
+		List<String> values = new ArrayList<String>(Arrays.asList(splittedContent));
+		
+		return values;
 	}
 }
