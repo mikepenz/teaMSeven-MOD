@@ -9,14 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fima.cardsui.objects.CardStack;
 import com.fima.cardsui.views.CardUI;
+import com.tundem.teamsevenmod.cardui.LibraryCard;
 import com.tundem.teamsevenmod.config.Cfg;
 import com.tundem.teamsevenmod.entity.MiscSetting;
 import com.tundem.teamsevenmod.helper.SettingHelper;
 import com.tundem.teamsevensysfschanger.R;
 
 public class TeaMSevenSettingsFragment extends Fragment {
-	
+
 	private CardUI mCardView = null;
 	private SettingHelper settingHelper = null;
 
@@ -32,7 +34,7 @@ public class TeaMSevenSettingsFragment extends Fragment {
 
 		// init CardView
 		mCardView = (CardUI) rootView.findViewById(R.id.cardsview);
-		mCardView.setSwipeable(true);
+		mCardView.setSwipeable(false);
 		mCardView.refresh();
 
 		return rootView;
@@ -40,14 +42,16 @@ public class TeaMSevenSettingsFragment extends Fragment {
 
 	public void notifyRootAvailable() {
 		for (MiscSetting miscSetting : Cfg.miscSettings) {
-			settingHelper.initSetting(miscSetting.getSettingPath());
+			//settingHelper.initSetting(miscSetting.getSettingPath());
 			File file = new File(miscSetting.getSettingPath());
 			if(file.exists()){
 				mCardView.addCard(settingHelper.getCard(miscSetting));
 			}
 		}
+		CardStack csl = new CardStack();
+		csl.setTitle(getString(R.string.cpustack));
 		for (MiscSetting misc : Cfg.cpuSettings){
-			settingHelper.initSetting(misc.getSettingPath());
+			//settingHelper.initSetting(misc.getSettingPath());
 			String filePath = "";
 			if(misc.getSettingName().contains("max")){
 				filePath = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq";
@@ -62,13 +66,14 @@ public class TeaMSevenSettingsFragment extends Fragment {
 				filePath = "/sys/block/mmcblk0/queue/scheduler";
 			}
 			try {
-				mCardView.addCard(settingHelper.getSpinnerCard(misc, filePath));
+				csl.add(settingHelper.getSpinnerCard(misc, filePath));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-
+		mCardView.addStack(csl);
 		mCardView.refresh();
+
 	}
 }

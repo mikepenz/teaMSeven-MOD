@@ -69,7 +69,7 @@ public class SettingHelper {
 						changedTo = act.getString(R.string.enabled);
 					}
 
-					//Crouton.showText(act, miscSetting.getSettingName() + " changed to: " + changedTo, Style.INFO);
+					Crouton.showText(act, miscSetting.getSettingName() + " changed to: " + changedTo, Style.INFO);
 
 					//Set setting from selection
 					editor.putString(miscSetting.getSettingPath(), setting);
@@ -100,11 +100,8 @@ public class SettingHelper {
 				String value = parent.getItemAtPosition(pos).toString();
 				FileHelper.writeFile(filePath, value);
 
-
 				String changedTo = value ;
-
 				Crouton.showText(act, miscSetting.getSettingName() + " changed to: " + changedTo, Style.INFO);
-
 				Log.d("-----FILEPATH-----", filePath + "-----------------" +value);
 				
 				//Set setting from selection
