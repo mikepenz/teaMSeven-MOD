@@ -28,7 +28,7 @@ public class TeaMSevenSettingsFragment extends Fragment {
 
 		// init CardView
 		mCardView = (CardUI) rootView.findViewById(R.id.cardsview);
-		mCardView.setSwipeable(true);
+		mCardView.setSwipeable(false);
 		mCardView.refresh();
 
 		return rootView;
