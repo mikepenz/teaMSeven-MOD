@@ -20,4 +20,5 @@
 
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
+    <string name="cpustack">CPU Settings</string>
 </resources>

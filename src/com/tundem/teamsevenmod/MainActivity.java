@@ -174,10 +174,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		@Override
 		protected void onPostExecute(Void result) {
 			dialog.dismiss();
-
+			
+			Crouton.showText(MainActivity.this, "Your Device is: " +android.os.Build.DEVICE, Style.CONFIRM);
+			
 			if (suAvailable) {
 				Crouton.showText(MainActivity.this, "ROOT permission aquired", Style.INFO);
-				
+
 				teaMSevenFragment.notifyRootAvailable();
 			} else {
 				Crouton.showText(MainActivity.this, "ROOT permission rejected", Style.ALERT);
