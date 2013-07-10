@@ -36,9 +36,41 @@ public class FileHelper {
 	}
 
 	public static void writeFile(String filePath, String value) {
-		CMDProcessor.runSuCommand("busybox echo "+ value + " > "+filePath);
+		//CMDProcessor.runSuCommand("busybox echo "+ value + " > "+filePath);
+		//Shell.SU.run("echo "+ value + " > "+filePath);
+
+		new WriteFileSU().setFilePath(filePath).setValue(value).execute();
 	}
-	
+
+	public static class WriteFileSU extends AsyncTask<Void, Void, Void> {
+		String filePath;
+		String value;
+
+		public WriteFileSU setFilePath(String filePath) {
+			this.filePath = filePath;
+			return this;
+		}
+
+		public WriteFileSU setValue(String value) {
+			this.value = value;
+			return this;
+		}
+
+		@Override
+		protected void onPreExecute() {
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			Shell.SU.run("echo " + value + " > " + filePath);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+		}
+	}
+
 	public static class ChangePermission extends AsyncTask<Void, Void, Void> {
 		String filePath;
 
@@ -80,11 +112,12 @@ public class FileHelper {
 		fin.close();
 		return ret;
 	}
-	public static List<String> getFileContentAsList(String filePath) throws Exception{
+
+	public static List<String> getFileContentAsList(String filePath) throws Exception {
 		String content = getStringFromFile(filePath);
 		String[] splittedContent = content.split(" ");
 		List<String> values = new ArrayList<String>(Arrays.asList(splittedContent));
-		
+
 		return values;
 	}
 }

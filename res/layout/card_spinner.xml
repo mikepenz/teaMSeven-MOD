@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:maxLines="20" >
-
-        </TextView>
+    </TextView>
 
     <View
         android:layout_width="fill_parent"
@@ -28,6 +27,11 @@
         android:orientation="vertical"
         android:padding="4dp" >
 
+        <Spinner
+            android:id="@+id/entries"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/description"
             style="@style/CardText"
@@ -36,12 +40,6 @@
             android:layout_marginLeft="8dp"
             android:maxLines="20" >
         </TextView>
-
-        <Spinner
-            android:id="@+id/entries"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
     </LinearLayout>
 
 </LinearLayout>

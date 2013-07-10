@@ -14,6 +14,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.tundem.teamsevenmod.cardui.SettingCard;
 import com.tundem.teamsevenmod.cardui.SpinnerCard;
+import com.tundem.teamsevenmod.entity.CPUSetting;
 import com.tundem.teamsevenmod.entity.MiscSetting;
 import com.tundem.teamsevenmod.util.FileHelper;
 import com.tundem.teamsevenmod.util.FileHelper.ChangePermission;
@@ -85,28 +86,30 @@ public class SettingHelper {
 	}
 
 
-	public SpinnerCard getSpinnerCard(final MiscSetting miscSetting, final String filePath) throws Exception {
+	public SpinnerCard getSpinnerCard(final CPUSetting cpuSetting) throws Exception {
 
-		List<String> spinnerContent = FileHelper.getFileContentAsList(miscSetting.getSettingPath());
+		List<String> spinnerContent = FileHelper.getFileContentAsList(cpuSetting.getSettingDefaultsPath());
 
 		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(act,
 				android.R.layout.simple_spinner_dropdown_item,
 				spinnerContent);
 
-		SpinnerCard spinnersetting = new SpinnerCard(miscSetting.getSettingName(), miscSetting.getSettingDescr(), spinnerArrayAdapter, new OnItemSelectedListener() {
+		SpinnerCard spinnersetting = new SpinnerCard(cpuSetting.getSettingName(), cpuSetting.getSettingDescr(), spinnerArrayAdapter, new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
 				String value = parent.getItemAtPosition(pos).toString();
-				FileHelper.writeFile(filePath, value);
+				
+				//DISABLE SAVING THIS SETTING TEMPORARY
+				//FileHelper.writeFile(cpuSetting.getSettingPath(), value);
 
 				String changedTo = value ;
-				Crouton.showText(act, miscSetting.getSettingName() + " changed to: " + changedTo, Style.INFO);
-				Log.d("-----FILEPATH-----", filePath + "-----------------" +value);
+				Crouton.showText(act, cpuSetting.getSettingName() + " changed to: " + changedTo, Style.INFO);
+				Log.d("-----FILEPATH-----", cpuSetting.getSettingPath() + "-----------------" +value);
 				
 				//Set setting from selection
-				editor.putString(filePath, value);
-				editor.commit();
+				//editor.putString(cpuSetting.getSettingPath(), value);
+				//editor.commit();
 			}
 
 			@Override

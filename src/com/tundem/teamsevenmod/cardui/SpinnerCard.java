@@ -15,9 +15,9 @@ public class SpinnerCard extends Card {
 	private String settingText = "";
 	private String description = "";
 	private OnItemSelectedListener ossl = null;
-	private ArrayAdapter adapter;
+	private ArrayAdapter<String> adapter;
 
-	public SpinnerCard(String settingText, String description, ArrayAdapter adapter, OnItemSelectedListener ossl) {
+	public SpinnerCard(String settingText, String description, ArrayAdapter<String> adapter, OnItemSelectedListener ossl) {
 		super(settingText);
 
 		this.settingText = settingText;

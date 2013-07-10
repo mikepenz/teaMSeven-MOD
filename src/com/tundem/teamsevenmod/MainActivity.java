@@ -15,7 +15,8 @@ import android.view.Menu;
 
 import com.crashlytics.android.Crashlytics;
 import com.tundem.teamsevenmod.fragment.AboutFragment;
-import com.tundem.teamsevenmod.fragment.TeaMSevenSettingsFragment;
+import com.tundem.teamsevenmod.fragment.CPUFragment;
+import com.tundem.teamsevenmod.fragment.MiscSettingsFragment;
 import com.tundem.teamsevensysfschanger.R;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -38,7 +39,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	/**
 	 * Our awesome fragments !!
 	 */
-	TeaMSevenSettingsFragment teaMSevenFragment = new TeaMSevenSettingsFragment();
+	CPUFragment cpuFragment = new CPUFragment();
+	MiscSettingsFragment miscSettingsFragment = new MiscSettingsFragment();
 	AboutFragment aboutFragment = new AboutFragment();
 
 	@Override
@@ -116,7 +118,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		@Override
 		public Fragment getItem(int position) {
 			if (position == 0) {
-				return teaMSevenFragment;
+				return cpuFragment;
+			} else if (position == 1) {
+				return miscSettingsFragment;
 			} else {
 				return aboutFragment;
 			}
@@ -124,15 +128,17 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
-				return "Misc";
+				return "CPU";
 			case 1:
+				return "Misc";
+			case 2:
 				return "ABOUT";
 			}
 			return null;
@@ -174,13 +180,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		@Override
 		protected void onPostExecute(Void result) {
 			dialog.dismiss();
-			
-			Crouton.showText(MainActivity.this, "Your Device is: " +android.os.Build.DEVICE, Style.CONFIRM);
-			
+
+			Crouton.showText(MainActivity.this, "Your Device is: " + android.os.Build.DEVICE, Style.CONFIRM);
+
 			if (suAvailable) {
 				Crouton.showText(MainActivity.this, "ROOT permission aquired", Style.INFO);
 
-				teaMSevenFragment.notifyRootAvailable();
+				cpuFragment.notifyRootAvailable();
+				miscSettingsFragment.notifyRootAvailable();
 			} else {
 				Crouton.showText(MainActivity.this, "ROOT permission rejected", Style.ALERT);
 			}
